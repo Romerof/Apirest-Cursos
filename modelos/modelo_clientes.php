@@ -28,11 +28,11 @@ class ModeloClientes{
         return $stm -> execute(array($val)) ? $stm -> fetchAll() : false;
     }
 
-    public function update() {
+    public function update(array $values) {
         $query = "SELECT * FROM `XX`";
         return  $this -> link -> query($query) -> fetchAll();
     }
-    public function delete() {
+    public function delete(string $id) {
         $query = "SELECT * FROM `XX`";
         return  $this -> link -> query($query) -> fetchAll();
     }

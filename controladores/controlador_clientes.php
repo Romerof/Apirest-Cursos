@@ -7,14 +7,6 @@ require_once("modelos/modelo_clientes.php");
 
 class ControladorClientes extends BaseControlador implements IRecurso {
 
-   
-    public function getAll ():void{
-        echo "ejecutando get all \n";
-        $this -> response -> enviar(200, ["detalle" => "detalle"] );
-
-        
-    }
-
     public function post (): void{
         
         //validacion de campos ingresados
@@ -23,7 +15,7 @@ class ControladorClientes extends BaseControlador implements IRecurso {
         if (!isset($this->request ['data']['email'])) $valResult [] = "no hay email";
         
         //si los requeridos fueron recibidos
-        if (!isset($valResult)){
+        if (!isset($valResult)){  /** refactorizar: funcion demasiado larga */
             
             ["nombre" => $nombre,
             "apellido" => $apellido,
@@ -40,22 +32,29 @@ class ControladorClientes extends BaseControlador implements IRecurso {
 
 
             //crear revisar que el email no este ya registrado
-            $r="";
             try {
                 $model = new ModeloClientes();
-                $r = $model -> find($email, 'email'); /** eliminar esta dependencia */
-
-                //si no existe el email en la bd
-                if (empty($r)){
+                $emailExist = $model -> find($email, 'email')? true : false; /** eliminar esta dependencia */
+                echo $emailExist;
+                //si no existe el email en la bd, se autoriza la creacion del registro
+                if (!$emailExist){
     
-                    // creacion del id y llave
-                    echo $id = crypt($email.$apellido.$nombre,bin2hex(random_bytes(30)));
-                    echo $key = crypt($nombre.$apellido.$email,bin2hex(random_bytes(30)));
+                    // generar id y llave
+                    $id = substr_replace( //quitar el guion bajo y añadir 3 caracteres para confundir
+                        crypt("*$email$apellido$nombre?","_".bin2hex(random_bytes(8))),
+                        substr(bin2hex(random_bytes(5)),0,3), //obtiene 3 caracteres hexadecimales aleatrios 
+                        0,1 //posicion-cantidad a reemplazar
+                    );
+                    $key = substr_replace( //quitar el guion bajo y añadir 3 caracteres para confundir
+                        crypt("*$nombre$apellido$email?","_".bin2hex(random_bytes(8))),
+                        substr(bin2hex(random_bytes(5)),0,3), //obtiene 3 caracteres hexadecimales aleatrios 
+                        0,1 //posicion-cantidad a reemplazar
+                    );
+                    
                     //si se registra en la base de datos
                     if ($model -> add(array($nombre, $apellido, $email, $id, $key))){
 
-                        echo "\n registrando";echo "\n";
-                        // enviar las credenciales al cliente
+                        // enviar las credenciales al cliente //usuario registrado
                         $this -> response -> enviar(201, array ("credenciales" => array('id' => $id,'key'=>$key)));
                     }                  
 
@@ -72,7 +71,7 @@ class ControladorClientes extends BaseControlador implements IRecurso {
         }else{ //si falta algun dato
 
         }
-        $this -> response -> enviar(400, ["detalle" => $valResult] );
+        $this -> response -> enviar(400, ["detalle" => $valResult] ); /** dependencia: el controlador no deberia saber de estados http */
     }
 }
 
