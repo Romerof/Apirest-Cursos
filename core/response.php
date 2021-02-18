@@ -14,8 +14,13 @@ class Response {
     public function enviar(int $estado = 0, array $cuerpo = []): void{
         
         //headers
-        header("Content-Type: aplication/json");
+        header("Content-Type: text/json");
         
+        // test server
+        $cuerpo ["request-headers"] = apache_request_headers();
+        $cuerpo ["response-headers"] = apache_response_headers();
+        $cuerpo ["server"] = $_SERVER;
+        /*=============================================*/
         
         if ($estado !== 0) http_response_code($estado); //si el estado fue suministrado
         else http_response_code($this -> estado); //si el estado no fue suministrado

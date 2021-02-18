@@ -16,25 +16,24 @@ class ModeloClientes{
 
     //retornamos el id si ejecuta la insercion, su no retorna false
     public function add(array $values) {
-        echo "modelo: \n";var_dump($values);echo "\n";
         $query = "INSERT INTO `clientes` (`nombre`,`apellido`,`email`,`id_cliente`,`llave_secreta`) VALUES (?,?,?,?,?)";
         $stm = $this -> link -> prepare($query);
-        return $stm -> execute(array($values)) ? $this -> link -> lastInsertId() : false; 
+        return $stm -> execute($values) ? $this -> link -> lastInsertId() : false; 
     }
 
-
-    public function find(string $id, string $columna = "id") {
-        $query = "SELECT `id`,`titulo`,`descripcion`,`instructor`,`imagen`,`precio` FROM `cursos` WHERE `${$columna}` = ?";
+    //busca las
+    public function find(string $val, string $columna = "id") {
+        $query = "SELECT `id`,`nombre`,`email`,`id_cliente`,`llave_secreta` FROM `clientes` WHERE `$columna` = ?";
         $stm = $this -> link -> prepare($query);
-        return $stm -> execute(array($id)) -> fetchAll();
+        return $stm -> execute(array($val)) ? $stm -> fetchAll() : false;
     }
 
     public function update() {
-        $query = "SELECT * FROM `cursos`";
+        $query = "SELECT * FROM `XX`";
         return  $this -> link -> query($query) -> fetchAll();
     }
     public function delete() {
-        $query = "SELECT * FROM `cursos`";
+        $query = "SELECT * FROM `XX`";
         return  $this -> link -> query($query) -> fetchAll();
     }
 }

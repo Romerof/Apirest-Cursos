@@ -22,15 +22,17 @@ class ControladorClientes extends BaseControlador implements IRecurso {
         if (!isset($this->request ['data']['apellido'])) $valResult [] = "no hay apellido";
         if (!isset($this->request ['data']['email'])) $valResult [] = "no hay email";
         
+        //si los requeridos fueron recibidos
         if (!isset($valResult)){
             
             ["nombre" => $nombre,
             "apellido" => $apellido,
             "email" => $email, ] = $this->request ['data'];
             
+
             //validacion del formato de los datos
             $regName = "/^[a-zA-ZáéíóúñÁÉÍÓÚÑ]{2,30}$/";  //nombre apellido
-            $regEmail = "/^[a-z][a-z0-9-_.]*@[a-z0-9-_.]+$/";  //nombre apellido az65-_.@sdf.a_df.as-df5.com
+            $regEmail = "/^[a-z][a-z0-9-_.]*@[a-z0-9-_.]+$/";  //email az65-_.@sdf.a_df.as-df5.com
             if(!preg_match($regName, $nombre)) $valResult [] = "formato nombre incorrecto";
             if(!preg_match($regName, $apellido)) $valResult [] = "formato apellido incorrecto";
             if(!preg_match($regEmail, $email) || strlen($email)> 20) $valResult [] = "formato email incorrecto";
@@ -38,22 +40,39 @@ class ControladorClientes extends BaseControlador implements IRecurso {
 
 
             //crear revisar que el email no este ya registrado
-            $model = new ModeloClientes();
+            $r="";
+            try {
+                $model = new ModeloClientes();
+                $r = $model -> find($email, 'email'); /** eliminar esta dependencia */
+
+                //si no existe el email en la bd
+                if (empty($r)){
+    
+                    // creacion del id y llave
+                    echo $id = crypt($email.$apellido.$nombre,bin2hex(random_bytes(30)));
+                    echo $key = crypt($nombre.$apellido.$email,bin2hex(random_bytes(30)));
+                    //si se registra en la base de datos
+                    if ($model -> add(array($nombre, $apellido, $email, $id, $key))){
+
+                        echo "\n registrando";echo "\n";
+                        // enviar las credenciales al cliente
+                        $this -> response -> enviar(201, array ("credenciales" => array('id' => $id,'key'=>$key)));
+                    }                  
+
+
+                }else{ // el email ya esta registrado
+                    $valResult [] = "email ya registrado";
+                }
+
+            } catch (PDOException $e) {
+                echo $e; /** loguear error  */
+            }
             
-            $r = $model -> find($email, 'email');
-            $r = 
-
-
-
-            
-
-            $this -> response -> enviar(200, array ($r));
-
             
         }else{ //si falta algun dato
 
         }
-        $this -> response -> enviar(200, ["detalle" => $valResult] );
+        $this -> response -> enviar(400, ["detalle" => $valResult] );
     }
 }
 
