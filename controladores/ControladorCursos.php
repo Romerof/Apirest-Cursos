@@ -1,9 +1,9 @@
 <?php 
-require_once("core/base_controlador.php");
-require_once("modelos/modelo_cursos.php");
+require_once("core/Controlador.php");
+require_once("modelos/ModeloCursos.php");
 
 
-class ControladorCursos extends BaseControlador{
+class ControladorCursos extends Controlador{
     
 
     public function index (): void {

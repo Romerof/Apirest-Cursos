@@ -1,11 +1,11 @@
 <?php 
 
-require_once("core/base_controlador.php");
-require_once("core/i_recurso.php");
-require_once("modelos/modelo_clientes.php");
+require_once("core/Controlador.php");
+require_once("core/IRecurso.php");
+require_once("modelos/ModeloClientes.php");
 
 
-class ControladorClientes extends BaseControlador implements IRecurso {
+class ControladorClientes extends Controlador implements IRecurso {
 
     public function post (): void{
         

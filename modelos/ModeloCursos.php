@@ -1,6 +1,5 @@
 <?php
-require_once("bd/provider.php");
-require_once("core/i_modelo.php");
+require_once("core/IModelo.php");
 
 class ModeloCursos implements IModelo{
     private $link;

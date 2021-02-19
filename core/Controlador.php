@@ -1,8 +1,8 @@
 <?php 
-require_once("core/response.php");
-require_once("core/i_recurso.php");
+require_once("core/Response.php");
+require_once("core/IRecurso.php");
 
-abstract class BaseControlador implements IRecurso{
+abstract class Controlador implements IRecurso{
     protected Response $response;
     protected Array $request;
 

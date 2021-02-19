@@ -1,2 +1,2 @@
 # Apirest-Cursos
-Implementación en PHP de una API REST que sirve información de cursos. Practica de desarrollo.
+Implementación en PHP de una API REST que sirve información de cursos. Práctica de desarrollo.

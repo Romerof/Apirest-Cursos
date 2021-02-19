@@ -1,4 +1,5 @@
 <?php 
+require_once("bd/Provider.php");
 interface IModelo{ /** refactorizar | intefaz modelos | valores de retorno */
   public function all();
   public function find(string $dato, string $columna);

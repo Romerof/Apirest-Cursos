@@ -16,12 +16,12 @@ if(!empty($req[3]) && empty($req[5])){
     
     
     if($coleccion == 'registro' || $coleccion == 'Registro' ){
-        include_once ("controladores/controlador_clientes.php");
+        include_once ("controladores/ControladorClientes.php");
         $ctrl = new ControladorClientes($request);
         $ctrl -> recurso($accion);
     }
     if($coleccion == 'cursos' || $coleccion == 'Cursos' ){
-        include_once ("controladores/controlador_cursos.php");
+        include_once ("controladores/ControladorCursos.php");
         $ctrl = new ControladorCursos($request);
         $ctrl -> recurso($accion);
     }
