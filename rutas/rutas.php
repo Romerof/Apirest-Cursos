@@ -1,5 +1,6 @@
 <?php 
 
+require_once("core/response.php");
 $accion = $_SERVER['REQUEST_METHOD'];
 $uri = $_SERVER['REQUEST_URI'];
 $req =  explode("/",$uri);
@@ -26,7 +27,7 @@ if(!empty($req[3]) && empty($req[5])){
     }
     
 }
-
-echo("no rute");
+$res = new response(404);
+$res -> enviar();
 
 ?>

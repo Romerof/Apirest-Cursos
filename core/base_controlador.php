@@ -11,7 +11,7 @@ abstract class BaseControlador implements IRecurso{
         $this -> request = $request;
     }
 
-    public function getAll(): void{
+    public function index(): void{
         $this -> response -> enviar(405, ['detalle' => 'Operacion invalida']);
     }
 
@@ -38,8 +38,8 @@ abstract class BaseControlador implements IRecurso{
         switch ($accion){
             case 'GET':
                 
-                if($this -> request['name']) $this -> get(); //si hay un nombre de recurso
-                else $this -> getAll(); //si no hay nombre de recurso
+                if(!empty($this -> request['name'])) $this -> get(); //si hay un nombre de recurso
+                else $this -> index(); //si no hay nombre de recurso
 
             break;
 

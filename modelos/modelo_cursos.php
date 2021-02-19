@@ -1,7 +1,8 @@
 <?php
 require_once("bd/provider.php");
+require_once("core/i_modelo.php");
 
-class ModeloCursos{
+class ModeloCursos implements IModelo{
     private $link;
     
     public function __construct(){
@@ -13,23 +14,23 @@ class ModeloCursos{
         $query = "SELECT * FROM `cursos`";
         return  $this -> link -> query($query) -> fetchAll();
     }
-    public function add() {
+    public function add(array $datos) {
         $query = "INSERT INTO `CURSOS` (`id`,`titulo`,`descripcion`,`instructor`,`imagen`,`precio`) VALUES (?,?,?,?,?,?)";
         $stm = $this -> link -> prepare($query);
         if ($stm -> execute(array($id))) return  $stm -> fetchAll();
         else return false;
     }
-    public function find($id) {
+    public function find(string $dato, string $columna) {
         $query = "SELECT `id`,`titulo`,`descripcion`,`instructor`,`imagen`,`precio` FROM `cursos` WHERE `id` = ?";
         $stm = $this -> link -> prepare($query);
         if ($stm -> execute(array($id))) return  $stm -> fetchAll();
         else return false;
     }
-    public function update() {
+    public function update(array $datos) {
         $query = "SELECT * FROM `cursos`";
         return  $this -> link -> query($query) -> fetchAll();
     }
-    public function delete() {
+    public function delete(string $id) {
         $query = "SELECT * FROM `cursos`";
         return  $this -> link -> query($query) -> fetchAll();
     }

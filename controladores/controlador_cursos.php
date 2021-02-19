@@ -4,38 +4,50 @@ require_once("modelos/modelo_cursos.php");
 
 
 class ControladorCursos extends BaseControlador{
-    private $modelo;
+    
 
-    public function __construct(){
-        $this -> modelo = new ModeloCursos();
-    }
-
-    public function index () {
+    public function index (): void {
         try{
-            return $this -> modelo -> all();
+            $modelo = new ModeloCursos();
+            $this -> response -> enviar  (200,$modelo -> all());
+        }catch(PDOException $e){
+            $this -> response -> enviar(500, ["detalle" => $e] ); /** refactorizar | estados http */
+        }
+    }
+    
+    public function get (): void{
 
+        //validar id solicitado
+        $regId ='/^[0-9]{0,11}$/';
+
+        if ( preg_match($regId, $this -> request ["name"] )) {
+            
+            $id = $this -> request ["name"];
+            echo "\n resultado evaluacion: (";
+            echo $id;
+            echo ")\n";
+        }else{ //si la 
+
+
+        }
+        
+        $this -> response -> enviar (200, $this -> request);
+        try{
+            $this -> response -> enviar  (200,$modelo -> all());
         }catch(PDOException $e){
             echo 'error pdo: ' . $e->getMessage();
         }
-        return false;
     }
-    public function get ($args){
-        try{
-            return $this -> modelo -> find($args);
+    public function post (): void{
+        $this -> response -> enviar  (501);
 
-        }catch(PDOException $e){
-            echo 'error pdo: ' . $e->getMessage();
-        }
-        return false;
     }
-    public function post ($args){
-        return "post de cursos";
+    public function put (): void{
+        $this -> response -> enviar  (501);
     }
-    public function put ($args){
-        return "put de cursos";
-    }
-    public function delete ($args){
-        return "delete de cursos";
+    public function delete (): void{
+        $this -> response -> enviar  (501);
+
     }
 
 }

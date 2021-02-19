@@ -1,7 +1,8 @@
 <?php
 require_once("bd/provider.php");
+require_once("core/i_modelo.php");
 
-class ModeloClientes{
+class ModeloClientes implements IModelo{
     private PDO $link;
 
     public function __construct(){
@@ -14,21 +15,21 @@ class ModeloClientes{
         return  $this -> link -> query($query) -> fetchAll();
     }
 
-    //retornamos el id si ejecuta la insercion, su no retorna false
-    public function add(array $values) {
-        $query = "INSERT INTO `clientes` (`nombre`,`apellido`,`email`,`id_cliente`,`llave_secreta`) VALUES (?,?,?,?,?)";
-        $stm = $this -> link -> prepare($query);
-        return $stm -> execute($values) ? $this -> link -> lastInsertId() : false; 
-    }
-
-    //busca las
+    //busca 
     public function find(string $val, string $columna = "id") {
         $query = "SELECT `id`,`nombre`,`email`,`id_cliente`,`llave_secreta` FROM `clientes` WHERE `$columna` = ?";
         $stm = $this -> link -> prepare($query);
         return $stm -> execute(array($val)) ? $stm -> fetchAll() : false;
     }
 
-    public function update(array $values) {
+    //retornamos el id si ejecuta la insercion, su no retorna false
+    public function add(array $datos) {
+        $query = "INSERT INTO `clientes` (`nombre`,`apellido`,`email`,`id_cliente`,`llave_secreta`) VALUES (?,?,?,?,?)";
+        $stm = $this -> link -> prepare($query);
+        return $stm -> execute($values) ? $this -> link -> lastInsertId() : false; 
+    }
+
+    public function update(array $datos) {
         $query = "SELECT * FROM `XX`";
         return  $this -> link -> query($query) -> fetchAll();
     }
