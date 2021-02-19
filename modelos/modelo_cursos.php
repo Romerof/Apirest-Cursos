@@ -20,10 +20,10 @@ class ModeloCursos implements IModelo{
         if ($stm -> execute(array($id))) return  $stm -> fetchAll();
         else return false;
     }
-    public function find(string $dato, string $columna) {
-        $query = "SELECT `id`,`titulo`,`descripcion`,`instructor`,`imagen`,`precio` FROM `cursos` WHERE `id` = ?";
+    public function find(string $dato, string $columna = "id") {
+        $query = "SELECT `id`,`titulo`,`descripcion`,`instructor`,`imagen`,`precio` FROM `cursos` WHERE `$columna` = ?";
         $stm = $this -> link -> prepare($query);
-        if ($stm -> execute(array($id))) return  $stm -> fetchAll();
+        if ($stm -> execute(array($dato))) return  $stm -> fetchAll();
         else return false;
     }
     public function update(array $datos) {

@@ -18,25 +18,28 @@ class ControladorCursos extends BaseControlador{
     public function get (): void{
 
         //validar id solicitado
-        $regId ='/^[0-9]{0,11}$/';
+        $regId ='/^[0-9]{1,11}$/';
 
-        if ( preg_match($regId, $this -> request ["name"] )) {
+        if (preg_match($regId, $this -> request ["name"] )) {
             
             $id = $this -> request ["name"];
             echo "\n resultado evaluacion: (";
             echo $id;
             echo ")\n";
-        }else{ //si la 
+            try{
+                $modelo = new ModeloCursos();
+                $this -> response -> enviar  (200,$modelo -> find($id));
+            }catch(PDOException $e){
+                echo 'error pdo: ' . $e->getMessage();
+            }
+
+        }else{ //si la no coincide con el patron
 
 
         }
         
         $this -> response -> enviar (200, $this -> request);
-        try{
-            $this -> response -> enviar  (200,$modelo -> all());
-        }catch(PDOException $e){
-            echo 'error pdo: ' . $e->getMessage();
-        }
+        
     }
     public function post (): void{
         $this -> response -> enviar  (501);
