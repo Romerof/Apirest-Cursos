@@ -33,10 +33,14 @@ abstract class Controlador implements IRecurso{
 
     public function recurso ($accion){
         
-        // echo "\n";
-        // var_dump($this -> request);
-        // echo "\n";
-        // exit();
+        /*echo "\n";
+        var_dump($this -> request);
+        echo "\n 2: ";
+        var_dump( file_get_contents("php://input"));
+        echo "\n";
+        var_dump( $_FILES);
+        echo "\n";
+        exit();
         /** refactorizar | inputs json */
         //var_dump( $data = json_decode(file_get_contents('php://input'), true)); 
         //echo "\n";
@@ -61,7 +65,9 @@ abstract class Controlador implements IRecurso{
             case 'PATCH':
 
                 //si hay nombre y hay datos
-                if(!empty($this -> request['name']) && !empty($this -> request['data'])) $this -> put();
+                /** refactorizar | request object | json inputs */
+                // if(!empty($this -> request['name']) && !empty($this -> request['data'])) $this -> put();
+                if(!empty($this -> request['name'])) $this -> put(); 
 
             break;
 
@@ -74,7 +80,7 @@ abstract class Controlador implements IRecurso{
 
         }
         
-        $this -> response -> enviar(405, ['detalle' => 'base controlador']);
+        $this -> response -> enviar(405, ['detalle' => 'controlador']);
     }
 
     

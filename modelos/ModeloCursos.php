@@ -38,9 +38,15 @@ class ModeloCursos implements IModelo{
         else return false;
     }
 
-    public function update(array $datos) {
-        $query = "SELECT * FROM `cursos`";
-        return  $this -> link -> query($query) -> fetchAll();
+    public function update($id, array $datos) {
+        $query = "UPDATE `cursos` "
+                ."SET `titulo`=?, `descripcion`=?, `instructor`=?, `imagen`=?, `precio`=? "
+                ."WHERE `id` = ?  "
+        ;
+        $stm = $this -> link -> prepare($query);
+        $datos [] = $id;
+        $stm -> execute($datos);
+        return $stm -> rowCount();
     }
 
     public function delete(string $id) {

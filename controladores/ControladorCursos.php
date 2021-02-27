@@ -22,7 +22,7 @@ class ControladorCursos extends Controlador{
         $id = $this -> request ["name"];
 
         //si id cumple con el patron
-        if (preg_match($regId, $id)) {
+        if (preg_match($regId, $id)) {  /** refactorizar | validacion de rutas */
 
             try{
                 
@@ -113,17 +113,90 @@ class ControladorCursos extends Controlador{
 
 
     public function put (): void{
-        $this -> response -> enviar  (501);
-    }
-    public function delete (): void{
+
         //validar id solicitado
         $regId ='/^[0-9]{1,11}$/';
         $id = $this -> request ["name"];
 
-        echo "<pre>";
-        var_dump($_REQUEST);
-        echo "</pre>";
-        exit;
+
+        $data = json_decode(file_get_contents("php://input"));
+
+        /** refactorizar | filter_input request | validaciones */
+        //verificar campos
+        $noEmpty =(!empty($data -> titulo)      // si alguna de
+            && !empty($data -> descripcion)     // estas expresiones
+            && !empty($data -> instructor)      // es "falsa" se
+            && !empty($data -> imagen)          // detiene la ejecucion
+            && !empty($data -> precio))          // de las siguientes
+            
+        //si faltan datos noempty es falso;
+        || false;
+
+
+        
+        //si no faltan datos
+        if($noEmpty && preg_match($regId, $id)) {
+
+            //asignar valores
+            $tit = $data -> titulo;
+            $desc = $data -> descripcion;
+            $ins = $data -> instructor;
+            $img = $data -> imagen;
+            $prc = $data ->precio;
+                
+            // validar formatos
+            $format =  (filter_var($tit, FILTER_SANITIZE_STRING)
+                        && filter_var($desc, FILTER_SANITIZE_STRING)
+                        && filter_var($ins, FILTER_SANITIZE_STRING)
+                        && filter_var($img, FILTER_VALIDATE_URL)
+                        && is_numeric($prc))
+
+                        //si alguna de las anteriores retorna algun falso
+            || false;
+
+            //si las entradas son correctas
+            if($format){
+
+                try {
+
+                    $model = new ModeloCursos ();
+                    $rowCount  = $model -> update($id, array($tit, $desc, $ins, $img, $prc));
+
+                } catch (PDOException $e) {
+
+                    $this -> response -> enviar(500, ["fail" => $e] ); /** refactorizar | estados http */
+
+                }
+
+                //si se actualizo
+                if($rowCount > 0){
+
+                    $this -> response -> enviar  (206, ["updated" => $id]); /** refactorizar | estados http */
+
+                }else{ //no hay datos, data es false
+
+                    $this -> response -> enviar  (404, ["not updated" => $id]); /** refactorizar | estados http */
+
+                }
+            }
+
+        } 
+
+        //faltan datos, o hay entrads vaciaas, o el formato es invalido, el formato del name ($id)
+        $this -> response -> enviar (
+            400,
+            array(  
+                "error" => "identificación inválida", 
+                "invalido" => "$id"
+            )
+        );
+
+    }
+
+    public function delete (): void{
+        //validar id solicitado
+        $regId ='/^[0-9]{1,11}$/';
+        $id = $this -> request ["name"];
 
         //si id cumple con el patron
         if (preg_match($regId, $id)) {
