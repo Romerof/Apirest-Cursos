@@ -32,8 +32,14 @@ abstract class Controlador implements IRecurso{
     }
 
     public function recurso ($accion){
-        echo "\n";
-        var_dump($this -> request['name']);
+        
+        //echo "\n";
+        //var_dump($this -> request);
+        //echo "\n";
+        /** refactorizar | inputs json */
+        //var_dump( $data = json_decode(file_get_contents('php://input'), true)); 
+        //echo "\n";
+        
         // recurso: /coleccion/nombre  o solo /coleccion
         switch ($accion){
             case 'GET':
@@ -44,6 +50,7 @@ abstract class Controlador implements IRecurso{
             break;
 
             case 'POST':
+                
                 // si no hay nombre y hay datos
                 if(empty($this -> request['name']) && !empty($this -> request['data'])) $this -> post();
 
