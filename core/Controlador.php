@@ -33,9 +33,10 @@ abstract class Controlador implements IRecurso{
 
     public function recurso ($accion){
         
-        //echo "\n";
-        //var_dump($this -> request);
-        //echo "\n";
+        // echo "\n";
+        // var_dump($this -> request);
+        // echo "\n";
+        // exit();
         /** refactorizar | inputs json */
         //var_dump( $data = json_decode(file_get_contents('php://input'), true)); 
         //echo "\n";

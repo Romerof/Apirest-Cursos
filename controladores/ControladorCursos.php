@@ -116,7 +116,46 @@ class ControladorCursos extends Controlador{
         $this -> response -> enviar  (501);
     }
     public function delete (): void{
-        $this -> response -> enviar  (501);
+        //validar id solicitado
+        $regId ='/^[0-9]{1,11}$/';
+        $id = $this -> request ["name"];
+
+        echo "<pre>";
+        var_dump($_REQUEST);
+        echo "</pre>";
+        exit;
+
+        //si id cumple con el patron
+        if (preg_match($regId, $id)) {
+
+            try{
+                
+                // se conuslta el id
+                $modelo = new ModeloCursos();
+                $rowCount = $modelo -> delete($id);
+
+            }catch(PDOException $e){
+                $this -> response -> enviar(500, ["fail" => $e] ); /** refactorizar | estados http */
+            }
+
+            //si hay datos en data
+            if($rowCount > 0){
+
+                $this -> response -> enviar  (206, ["delete" => $id]); /** refactorizar | estados http */
+
+            }else{ //no hay datos, data es false
+
+                $this -> response -> enviar  (404, ["fail" => $id]); /** refactorizar | estados http */
+
+            }
+            
+        }else{ //id no cumple con el patron
+            $this -> response -> enviar (
+                    400,
+                    array(  "error" => "identificación inválida",  /** refactorizar | estados http */
+                            "invalido" => "$id"
+                    ));
+        }
 
     }
 

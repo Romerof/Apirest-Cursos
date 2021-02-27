@@ -18,15 +18,22 @@ class ModeloCursos implements IModelo{
 
     public function add(array $datos) {
 
-        $query = "INSERT INTO `cursos` (`titulo`,`descripcion`,`instructor`,`imagen`,`precio`) VALUES (?,?,?,?,?)";
+        $query = "INSERT INTO `cursos` (`titulo`,`descripcion`,`instructor`,`imagen`,`precio`) "
+                ."VALUES (?,?,?,?,?)"
+        ;
         $stm = $this -> link -> prepare($query);
 
         return ($stm -> execute($datos)) ? $this -> link -> lastInsertID() : false;
     }
 
     public function find(string $dato, string $columna = "id") {
-        $query = "SELECT `id`,`titulo`,`descripcion`,`instructor`,`imagen`,`precio` FROM `cursos` WHERE `$columna` = ?";
+
+        $query = "SELECT `id`,`titulo`,`descripcion`,`instructor`,`imagen`,`precio` "
+                ."FROM `cursos` "
+                ."WHERE `$columna` = ?"
+        ;
         $stm = $this -> link -> prepare($query);
+
         if ($stm -> execute(array($dato))) return  $stm -> fetchAll();
         else return false;
     }
@@ -35,8 +42,13 @@ class ModeloCursos implements IModelo{
         $query = "SELECT * FROM `cursos`";
         return  $this -> link -> query($query) -> fetchAll();
     }
+
     public function delete(string $id) {
-        $query = "SELECT * FROM `cursos`";
-        return  $this -> link -> query($query) -> fetchAll();
+
+        $query = "DELETE FROM `cursos` WHERE id = ?";
+        $stm = $this-> link-> prepare($query);
+        $stm -> execute(array($id));
+
+        return $stm -> rowCount();
     }
 }
